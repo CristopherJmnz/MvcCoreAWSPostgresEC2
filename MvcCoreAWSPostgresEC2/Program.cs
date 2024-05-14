@@ -1,13 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 using MvcCoreAWSPostgresEC2.Data;
 using MvcCoreAWSPostgresEC2.Repositories;
+using MySqlConnector;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-string connectionString = builder.Configuration.GetConnectionString("Postgres");
-builder.Services.AddDbContext<DepartamentosContext>(options => options.UseNpgsql(connectionString));
+string connectionString = builder.Configuration.GetConnectionString("MariaDb");
+//builder.Services.AddDbContext<DepartamentosContext>(options => options.UseNpgsql(connectionString));
+builder.Services.AddDbContext<DepartamentosContext>
+    (options => options.UseMySql(connectionString,ServerVersion.AutoDetect(new MySqlConnection(connectionString))));
 builder.Services.AddTransient<DepartamentosRepository>();
 
 var app = builder.Build();
